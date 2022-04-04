@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+# vim: nu foldmethod=marker
+# vim: expandtab shiftwidth=2 softtabstop=2 autoindent
+
+---
+  - name: Playbook to install my common programs and keep the computer up to date.
+    hosts: all
+    become: true
+    tasks:
+    - name: Check for updates
+      register: updatesys
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600 #1 hour, time in seconds
+    - name: Install vim
+      apt:
+        name: vim
+        state: latest
+    - name: Install automake
+      apt:
+        name: automake
+        state: latest
+    - name: Install LaTeX
+      apt:
+        name: texlive-full
+        state: latest
+    - name: Install Boinc
+      apt:
+        name: boinc-client
+        state: latest
+    - name: Install Cowsay, For the Herd!
+      apt:
+        name: Cowsay
+        state: latest
+    - name: Upgrade all remaining packages
+      register: updatesys
+      apt:
+        name: "*"
+        state: latest
+    - name: Display the last line of apt upgrade.
+      debug:
+        msg: "{{updatesys.stdout_lines|last}}"
+    - name: Rebooting to install updates
+      reboot:
+    - name: Clean up the cache
+      apt:
+        autoclean: yes
+    - name: Remove dependencies that are no longer required.
+      apt:
+        autoremove: yes
