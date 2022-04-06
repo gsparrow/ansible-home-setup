@@ -35,8 +35,7 @@
     - name: Upgrade all remaining packages
       register: updatesys
       apt:
-        name: "*"
-        state: latest
+        upgrade: full
     - name: Display the last line of apt upgrade.
       debug:
         msg: "{{updatesys.stdout_lines|last}}"
