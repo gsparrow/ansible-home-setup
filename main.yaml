@@ -30,7 +30,7 @@
         state: latest
     - name: Install Cowsay, For the Herd!
       apt:
-        name: Cowsay
+        name: cowsay
         state: latest
     - name: Upgrade all remaining packages
       register: updatesys
