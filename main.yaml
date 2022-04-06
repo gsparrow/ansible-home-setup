@@ -22,7 +22,7 @@
     - name: Install Common Programs
       apt:
         name: "{{common_programs}}"
-        state: latest
+        state: present
     - name: Upgrade all remaining packages
       register: updatesys
       apt:
