@@ -12,29 +12,37 @@
         - texlive-full
         - boinc-client
         - cowsay
-    become: true
     tasks:
+    - name: Getting Variables from the secret
+      include_vars: 
+        file: secrets.yaml
     - name: Check for updates
       register: updatesys
+      become: true
       apt:
         update_cache: yes
         cache_valid_time: 3600 #1 hour, time in seconds
     - name: Install Common Programs
+      become: true
       apt:
         name: "{{common_programs}}"
         state: present
     - name: Upgrade all remaining packages
       register: updatesys
+      become: true
       apt:
         upgrade: full
     - name: Display the last line of apt upgrade.
       debug:
         msg: "{{updatesys.stdout_lines|last}}"
     - name: Rebooting to install updates
+      become: true
       reboot:
     - name: Clean up the cache
+      become: true
       apt:
         autoclean: yes
     - name: Remove dependencies that are no longer required.
+      become: true
       apt:
         autoremove: yes
