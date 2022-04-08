@@ -19,30 +19,27 @@
     - name: Check for updates
       register: updatesys
       become: true
-      apt:
+      package:
         update_cache: yes
         cache_valid_time: 3600 #1 hour, time in seconds
     - name: Install Common Programs
       become: true
-      apt:
+      package:
         name: "{{common_programs}}"
         state: present
     - name: Upgrade all remaining packages
       register: updatesys
       become: true
-      apt:
+      package:
         upgrade: full
-    - name: Display the last line of apt upgrade.
-      debug:
-        msg: "{{updatesys.stdout_lines|last}}"
     - name: Rebooting to install updates
       become: true
       reboot:
     - name: Clean up the cache
       become: true
-      apt:
+      package:
         autoclean: yes
     - name: Remove dependencies that are no longer required.
       become: true
-      apt:
+      package:
         autoremove: yes
