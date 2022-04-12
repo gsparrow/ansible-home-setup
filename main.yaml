@@ -9,13 +9,18 @@
       common_programs:
         - vim
         - automake
+        - git
         - texlive-full
         - boinc-client
         - cowsay
+      programs_to_remove:
+        - nano
+        - emacs
     tasks:
     - name: Getting Variables from the secret
       include_vars: 
         file: secrets.yaml
+
     - name: Check for updates
       register: updatesys
       become: true
@@ -27,19 +32,26 @@
       package:
         name: "{{common_programs}}"
         state: present
+      notify:
+      - Reboot to install
+    - name: Remove Bloatware Programs
+      become: true
+      package:
+        name: "{{programs_to_remove}}"
+        state: absent
+      notify:
+      - Reboot to install
+
     - name: Upgrade all remaining packages
       register: updatesys
       become: true
       package:
         upgrade: full
-    - name: Rebooting to install updates
-      become: true
-      reboot:
-    - name: Clean up the cache
-      become: true
-      package:
-        autoclean: yes
-    - name: Remove dependencies that are no longer required.
-      become: true
-      package:
-        autoremove: yes
+      notify:
+      - Reboot to install
+
+    handlers:
+      - name: Reboot to install
+        become: true
+        reboot:
+        when: ansible_connection == "ssh"
