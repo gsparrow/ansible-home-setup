@@ -16,6 +16,7 @@
         - boinc-client
         - cowsay
         - tree
+        - nmon
       common_root_python_programs:
         - ansible
       programs_to_remove:
@@ -70,6 +71,18 @@
       copy:
         src: ./files/vim_configuration/.vim/
         dest: ~/.vim/
+
+    - name: Copy Bash's .bashrc from the git submodule to hosts
+      copy:
+        src: ./files/bash_configuration/.bashrc
+        dest: ~/.bashrc
+    - name: Copy Bash's /etc/ files from the git submodule to hosts
+      become: true
+      copy:
+        src: ./files/bash_configuration/etc/
+        dest: /etc/
+        owner: root
+        group: root
 
     handlers:
       - name: Reboot to install

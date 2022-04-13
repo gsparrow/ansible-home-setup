@@ -1,3 +1,6 @@
 [submodule "files/vim_configuration"]
 	path = files/vim_configuration
 	url = git@github.com:gsparrow/vim_configuration.git
+[submodule "files/bash_configuration"]
+	path = files/bash_configuration
+	url = git@github.com:gsparrow/bash_configuration.git
