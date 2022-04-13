@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
-# vim: nu foldmethod=marker
-# vim: expandtab shiftwidth=2 softtabstop=2 autoindent
+# vim: foldmethod=marker
+# vim: expandtab shiftwidth=2 softtabstop=2
 
 ---
   - name: Playbook to install my common programs and keep the computer up to date.
     hosts: all
     vars:
       common_programs:
+        - python3-pip
+        - tmux
         - vim
         - automake
         - git
         - texlive-full
         - boinc-client
         - cowsay
+        - tree
+      common_root_python_programs:
+        - ansible
       programs_to_remove:
         - nano
         - emacs
@@ -34,6 +39,13 @@
         state: present
       notify:
       - Reboot to install
+    - name: Install Common Root User Python Programs
+      become: true
+      pip:
+        name: "{{common_root_python_programs}}"
+        state: present
+      notify:
+      - Reboot to install
     - name: Remove Bloatware Programs
       become: true
       package:
@@ -49,6 +61,15 @@
         upgrade: full
       notify:
       - Reboot to install
+
+    - name: Copy Vim's .vimrc from the git submodule to hosts
+      copy:
+        src: ./files/vim_configuration/.vimrc
+        dest: ~/.vimrc
+    - name: Copy the .vim directory from the git submodule to hosts, which contains language files
+      copy:
+        src: ./files/vim_configuration/.vim/
+        dest: ~/.vim/
 
     handlers:
       - name: Reboot to install
