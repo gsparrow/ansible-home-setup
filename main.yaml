@@ -8,20 +8,38 @@
     vars:
       common_programs:
         - python3-pip
-        - tmux
         - vim
         - automake
         - git
         - texlive-full
         - boinc-client
-        - cowsay
+        - cowsay #For the Herd!
         - tree
         - nmon
+        - wavemon
+        - pv
+        - ispell
+      common_x86_programs:
+        - handbrake
       common_root_python_programs:
         - ansible
+      uncommon_programs:
+        - sshfs
+        - fuseiso
+        - sshuttle
+        - xchat
+        - lm-sensors
+        - libopenmpi-dev
+        - openmpi-bin
+      uncommon_x86_programs:
+        - blender
+      uncommon_root_python_programs:
+        - pygame
+        - pillow
       programs_to_remove:
         - nano
         - emacs
+        - tmux #Removed due to lack of use
     tasks:
     - name: Getting Variables from the secret
       include_vars: 
