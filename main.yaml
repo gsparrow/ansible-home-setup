@@ -3,6 +3,9 @@
 # vim: expandtab shiftwidth=2 softtabstop=2
 
 ---
+#######################################################################################
+# For All Computers {{{
+#######################################################################################
   - name: Playbook to install my common programs and keep the computer up to date.
     hosts: all
     vars:
@@ -17,22 +20,21 @@
         - tree
         - nmon
         - wavemon
+        - htop
         - pv
         - ispell
-      common_x86_programs:
-        - handbrake
+        - clamav
+        - clamav-base
+        - clamav-freshclam
       common_root_python_programs:
         - ansible
       uncommon_programs:
         - sshfs
         - fuseiso
         - sshuttle
-        - xchat
         - lm-sensors
         - libopenmpi-dev
         - openmpi-bin
-      uncommon_x86_programs:
-        - blender
       uncommon_root_python_programs:
         - pygame
         - pillow
@@ -40,10 +42,14 @@
         - nano
         - emacs
         - tmux #Removed due to lack of use
+        - xchat
     tasks:
     - name: Getting Variables from the secret
       include_vars: 
         file: secrets.yaml
+
+    - name: Ping the hosts to make sure they are available
+      ping:
 
     - name: Check for updates
       register: updatesys
@@ -102,8 +108,47 @@
         owner: root
         group: root
 
+    - name: Copy Keyboard Configuration File
+      become: true
+      copy:
+        src: ./files/keyboard_configuration/keyboard
+        dest: /etc/default/
+        owner: root
+        group: root
+
     handlers:
       - name: Reboot to install
         become: true
         reboot:
         when: ansible_connection == "ssh"
+
+#######################################################################################
+# }}}
+#######################################################################################
+# For X86 Computers {{{
+#######################################################################################
+  - name: Playbook to install my common x86 programs.
+    hosts: x86
+    vars:
+      common_x86_programs:
+        - vlc
+        - clamtk
+      uncommon_x86_programs:
+        - blender
+        - gimp
+    tasks:
+    - name: Install Common X86 Programs
+      become: true
+      package:
+        name: "{{common_x86_programs}}"
+        state: present
+      notify:
+      - Reboot to install
+
+    handlers:
+      - name: Reboot to install
+        become: true
+        reboot:
+        when: ansible_connection == "ssh"
+#######################################################################################
+# }}}

@@ -4,3 +4,6 @@
 [submodule "files/bash_configuration"]
 	path = files/bash_configuration
 	url = git@github.com:gsparrow/bash_configuration.git
+[submodule "files/keyboard_configuration"]
+	path = files/keyboard_configuration
+	url = git@github.com:gsparrow/keyboard_configuration.git
